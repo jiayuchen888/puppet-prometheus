@@ -142,12 +142,12 @@ class prometheus::mysqld_exporter (
     mode    => $config_mode,
     owner   => $user,
     group   => $group,
-    content => Sensitive(
-      epp(
+    content => Deferred('sensitive',[
+    Deferred('epp', [
         'prometheus/my.cnf.epp',
         { 'settings' => $_cnf_settings }
-      )
-    ),
+      ])
+    ]),
     notify  => $notify_service,
   }
 
