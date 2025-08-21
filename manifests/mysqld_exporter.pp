@@ -89,7 +89,7 @@ class prometheus::mysqld_exporter (
   Stdlib::Host $cnf_host                                     = localhost,
   Stdlib::Port $cnf_port                                     = 3306,
   String[1] $cnf_user                                        = login,
-  Variant[Sensitive[String],String] $cnf_password            = 'password',
+  Variant[Deferred, Sensitive[String],String] $cnf_password  = 'password',
   Optional[Stdlib::Absolutepath] $cnf_socket                 = undef,
   Boolean $purge_config_dir                                  = true,
   Boolean $restart_on_change                                 = true,
