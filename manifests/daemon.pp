@@ -42,7 +42,7 @@
 # @param archive_bin_path
 #  Path to the binary in the downloaded archive.
 # @param init_style
-#  Service startup scripts style (e.g. rc, upstart or systemd).
+#  Service startup scripts style (e.g. rc or systemd).
 #  Can also be set to `none` when you don't want the class to create a startup script/unit_file for you.
 #  Typically this can be used when a package is already providing the file.
 # @param proxy_server
@@ -159,10 +159,10 @@ define prometheus::daemon (
       User[$user] ~> $notify_service
     }
     ensure_resource('user', [$user], {
-        ensure => $ensure,
-        system => true,
-        groups => $extra_groups,
-        shell  => $usershell,
+      ensure => $ensure,
+      system => true,
+      groups => $extra_groups,
+      shell  => $usershell,
     })
 
     if $manage_group {
@@ -176,35 +176,12 @@ define prometheus::daemon (
   }
   if $manage_group {
     ensure_resource('group', [$group], {
-        ensure => $ensure,
-        system => true,
+      ensure => $ensure,
+      system => true,
     })
   }
 
   case $init_style { # lint:ignore:case_without_default
-    'upstart': {
-      file { "/etc/init/${name}.conf":
-        ensure  => stdlib::ensure($ensure, 'file'),
-        mode    => '0444',
-        owner   => 'root',
-        group   => 'root',
-        content => template('prometheus/daemon.upstart.erb'),
-      }
-      file { "/etc/init.d/${name}":
-        ensure => stdlib::ensure($ensure, 'file'),
-        target => '/lib/init/upstart-job',
-        owner  => 'root',
-        group  => 'root',
-        mode   => '0755',
-      }
-      if $notify_service !~ Undef {
-        if $ensure == 'present' {
-          File["/etc/init/${name}.conf"] ~> $notify_service
-        } else {
-          $notify_service -> File["/etc/init/${name}.conf"]
-        }
-      }
-    }
     'systemd': {
       include 'systemd'
       systemd::manage_unit { "${name}.service":

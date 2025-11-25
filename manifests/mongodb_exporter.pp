@@ -20,7 +20,7 @@
 # @param group
 #  Group under which the binary is running
 # @param init_style
-#  Service startup scripts style (e.g. rc, upstart or systemd)
+#  Service startup scripts style (e.g. rc or systemd)
 # @param install_method
 #  Installation method: url or package (only url is supported currently)
 # @param manage_group
@@ -68,7 +68,7 @@ class prometheus::mongodb_exporter (
   String[1] $service_name                                    = 'mongodb_exporter',
   String[1] $user                                            = 'mongodb-exporter',
   # renovate: depName=percona/mongodb_exporter
-  String[1] $version                                         = '0.47.0',
+  String[1] $version                                         = '0.47.1',
   Boolean $use_kingpin                                       = true,
   Boolean $purge_config_dir                                  = true,
   Boolean $restart_on_change                                 = true,

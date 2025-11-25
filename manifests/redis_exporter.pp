@@ -20,7 +20,7 @@
 # @param group
 #  Group under which the binary is running
 # @param init_style
-#  Service startup scripts style (e.g. rc, upstart or systemd)
+#  Service startup scripts style (e.g. rc or systemd)
 # @param install_method
 #  Installation method: url or package (only url is supported currently)
 # @param manage_group
@@ -65,7 +65,7 @@ class prometheus::redis_exporter (
   String[1] $package_name = 'redis_exporter',
   String[1] $user = 'redis-exporter',
   # renovate: depName=oliver006/redis_exporter
-  String[1] $version = '1.75.0',
+  String[1] $version = '1.80.0',
   Boolean $purge_config_dir                                  = true,
   Boolean $restart_on_change                                 = true,
   Boolean $service_enable                                    = true,

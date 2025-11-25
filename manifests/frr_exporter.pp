@@ -18,7 +18,7 @@
 # @param group
 #  Group under which the binary is running
 # @param init_style
-#  Service startup scripts style (e.g. rc, upstart or systemd)
+#  Service startup scripts style (e.g. rc or systemd)
 # @param install_method
 #  Installation method: url or package (only url is supported currently)
 # @param log_level
@@ -86,7 +86,7 @@ class prometheus::frr_exporter (
   String[1] $package_name = 'frr_exporter',
   String[1] $user = 'frr-exporter',
   # renovate: depName=tynany/frr_exporter
-  String[1] $version = '1.8.0',
+  String[1] $version = '1.9.0',
   Boolean $purge_config_dir = true,
   Boolean $restart_on_change = true,
   Boolean $service_enable = true,
@@ -143,7 +143,7 @@ class prometheus::frr_exporter (
   $all_opts = [$_frr_socket_dir_opt, $_listen_address_opt, $_telemetry_path_opt, $_log_level_opt] + $all_collector_opts
   $options = join($all_opts, ' ')
 
-  # Extract port from web_listen_address for scrape configuration  
+  # Extract port from web_listen_address for scrape configuration
   $scrape_port_int = Integer(split($web_listen_address, ':')[-1])
 
   prometheus::daemon { $service_name:

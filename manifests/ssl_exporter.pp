@@ -20,7 +20,7 @@
 # @param group
 #  Group under which the binary is running
 # @param init_style
-#  Service startup scripts style (e.g. rc, upstart or systemd)
+#  Service startup scripts style (e.g. rc or systemd)
 # @param install_method
 #  Installation method: url or package (only url is supported currently)
 # @param manage_group
@@ -109,8 +109,8 @@ class prometheus::ssl_exporter (
   }
 
   $options = join([
-      "--config.file=${config_file}",
-      $extra_options,
+    "--config.file=${config_file}",
+    $extra_options,
   ], ' ')
 
   # SSL exporter is not packaged into a directory

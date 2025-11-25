@@ -16,7 +16,7 @@
 # @param group
 #  Group under which the binary is running
 # @param init_style
-#  Service startup scripts style (e.g. rc, upstart or systemd)
+#  Service startup scripts style (e.g. rc or systemd)
 # @param install_method
 #  Installation method: url or package (only url is supported currently)
 # @param manage_group
@@ -72,7 +72,7 @@ class prometheus::postgres_exporter (
   String[1] $package_name = 'postgres_exporter',
   String[1] $user = 'postgres-exporter',
   # renovate: depName=prometheus-community/postgres_exporter
-  String[1] $version = '0.17.1',
+  String[1] $version = '0.18.1',
   String[1] $data_source_uri = 'host=/var/run/postgresql/ sslmode=disable',
   Enum['custom', 'env', 'file'] $postgres_auth_method = 'env',
   Hash[String[1],String[1]] $data_source_custom              = {},

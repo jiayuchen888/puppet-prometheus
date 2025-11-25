@@ -24,7 +24,7 @@
 # @param group
 #  Group under which the binary is running
 # @param init_style
-#  Service startup scripts style (e.g. rc, upstart or systemd)
+#  Service startup scripts style (e.g. rc or systemd)
 # @param install_method
 #  Installation method: url or package (only url is supported currently)
 # @param manage_group
@@ -83,7 +83,7 @@ class prometheus::beanstalkd_exporter (
   Boolean $manage_user                                       = true,
   String[1] $os                                              = downcase($facts['kernel']),
   Optional[String[1]] $extra_options                         = undef,
-  Variant[Undef,String] $download_url                        = undef,
+  Optional[String] $download_url                             = undef,
   String[1] $arch                                            = $prometheus::real_arch,
   Stdlib::Absolutepath $bin_dir                              = $prometheus::bin_dir,
   Boolean $export_scrape_job                                 = false,

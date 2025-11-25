@@ -31,7 +31,7 @@
 # @param group
 #  Group under which the binary is running
 # @param init_style
-#  Service startup scripts style (e.g. rc, upstart or systemd)
+#  Service startup scripts style (e.g. rc or systemd)
 # @param install_method
 #  Installation method: url or package (only url is supported currently)
 # @param manage_group
@@ -83,7 +83,7 @@ class prometheus::mysqld_exporter (
   String[1] $package_name = 'mysqld_exporter',
   String[1] $user = 'mysqld-exporter',
   # renovate: depName=prometheus/mysqld_exporter
-  String[1] $version                                         = '0.17.2',
+  String[1] $version                                         = '0.18.0',
   String[1] $service_name = 'mysqld_exporter',
   Stdlib::Absolutepath $cnf_config_path                      = '/etc/mysqld_exporter-my.cnf',
   Stdlib::Host $cnf_host                                     = localhost,
