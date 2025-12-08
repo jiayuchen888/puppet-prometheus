@@ -89,7 +89,7 @@ class prometheus::postgres_exporter (
   String[1] $os                                              = downcase($facts['kernel']),
   String $options                                            = '', # lint:ignore:params_empty_string_assignment
   Optional[Prometheus::Uri] $download_url                    = undef,
-  Optional[String] $postgres_pass                            = undef,
+  Optional[Variant[String, Sensitive]] $postgres_pass        = undef,
   Optional[String] $postgres_user                            = undef,
   String[1] $arch                                            = $prometheus::real_arch,
   Stdlib::Absolutepath $bin_dir                              = $prometheus::bin_dir,
@@ -102,6 +102,7 @@ class prometheus::postgres_exporter (
   Optional[Enum['none', 'http', 'https', 'ftp']] $proxy_type = undef,
   Stdlib::Absolutepath $web_config_file                      = '/etc/postgres_exporter_web-config.yml',
   Prometheus::Web_config $web_config_content                 = {},
+  Stdlib::Absolutepath $datasource_file                      = '/etc/sysconfig/postgres_exporter_ds',
 ) inherits prometheus {
   $release = "v${version}"
 
@@ -143,19 +144,32 @@ class prometheus::postgres_exporter (
     $_web_config,
   ].filter |$x| { !$x.empty }.join(' ')
 
-  case $postgres_auth_method {
-    'env': {
-      $env_vars = {
-        'DATA_SOURCE_URI'       => $data_source_uri,
-        'DATA_SOURCE_USER'      => $postgres_user,
-        'DATA_SOURCE_PASS'      => $postgres_pass,
-      }
+  # Create datasource file when using 'env' or 'file' method
+  if $postgres_auth_method in ['env', 'file'] {
+    file { $datasource_file:
+      ensure  => file,
+      owner   => $user,
+      group   => $group,
+      mode    => '0600',  # Secure permissions - only user can read
+      content => Sensitive(Deferred('inline_epp', [
+        '# THIS FILE IS MANAGED BY PUPPET
+DATA_SOURCE_URI=<%= $uri %>
+DATA_SOURCE_USER=<%= $user %>
+DATA_SOURCE_PASS=<%= $pass %>',
+        {
+          'uri'  => $data_source_uri,
+          'user' => $postgres_user,
+          'pass' => $postgres_pass,
+        }
+      ])),
+      notify  => $notify_service,
     }
-    'file': {
+  }
+
+  case $postgres_auth_method {
+    'env', 'file': {
       $env_vars = {
-        'DATA_SOURCE_URI'       => $data_source_uri,
-        'DATA_SOURCE_USER_FILE' => $postgres_user,
-        'DATA_SOURCE_PASS_FILE' => $postgres_pass,
+        'DATA_SOURCE_URI_FILE' => $datasource_file,
       }
     }
     'custom': {
